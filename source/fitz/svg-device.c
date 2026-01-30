@@ -142,7 +142,7 @@ svg_path_emit_command(fz_context *ctx, struct svg_path_walker_state *pws, char c
 	if (pws->space)
 		fz_append_byte(ctx, pws->out, ' ');
 	fz_append_byte(ctx, pws->out, cmd);
-	pws->space = 0;
+	pws->space = 1;
 	pws->cmd = cmd;
 }
 
