@@ -140,13 +140,11 @@ svg_path_emit_number(fz_context *ctx, struct svg_path_walker_state *pws, float a
 static void
 svg_path_emit_command(fz_context *ctx, struct svg_path_walker_state *pws, char cmd)
 {
-	if (pws->cmd != cmd) {
-		if (pws->space)
-			fz_append_byte(ctx, pws->out, ' ');
-		fz_append_byte(ctx, pws->out, cmd);
-		pws->space = 0;
-		pws->cmd = cmd;
-	}
+	if (pws->space)
+		fz_append_byte(ctx, pws->out, ' ');
+	fz_append_byte(ctx, pws->out, cmd);
+	pws->space = 0;
+	pws->cmd = cmd;
 }
 
 static void
@@ -165,17 +163,9 @@ static void
 svg_path_lineto(fz_context *ctx, void *arg, float x, float y)
 {
 	struct svg_path_walker_state *pws = arg;
-	if (pws->x == x) {
-		svg_path_emit_command(ctx, pws, 'V');
-		svg_path_emit_number(ctx, pws, y);
-	} else if (pws->y == y) {
-		svg_path_emit_command(ctx, pws, 'H');
-		svg_path_emit_number(ctx, pws, x);
-	} else {
-		svg_path_emit_command(ctx, pws, 'L');
-		svg_path_emit_number(ctx, pws, x);
-		svg_path_emit_number(ctx, pws, y);
-	}
+	svg_path_emit_command(ctx, pws, 'L');
+	svg_path_emit_number(ctx, pws, x);
+	svg_path_emit_number(ctx, pws, y);
 	pws->x = x;
 	pws->y = y;
 }
