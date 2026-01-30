@@ -131,7 +131,7 @@ struct svg_path_walker_state {
 static void
 svg_path_emit_number(fz_context *ctx, struct svg_path_walker_state *pws, float a)
 {
-	if (pws->space && a >= 0)
+	if (pws->space || a >= 0)
 		fz_append_byte(ctx, pws->out, ' ');
 	fz_append_printf(ctx, pws->out, "%g", a);
 	pws->space = 1;
