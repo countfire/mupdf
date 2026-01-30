@@ -1952,6 +1952,10 @@ fz_get_glyph_name(fz_context *ctx, fz_font *font, int glyph, char *buf, int size
 	{
 		fz_snprintf(buf, size, "%d", glyph);
 	}
+	if (strlen(buf) == 0) {
+		// if we get an empty name, might as well map to the glyphid instead
+		fz_snprintf(buf, size, "%d", glyph);
+	}
 }
 
 float

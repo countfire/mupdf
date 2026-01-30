@@ -131,8 +131,7 @@ struct svg_path_walker_state {
 static void
 svg_path_emit_number(fz_context *ctx, struct svg_path_walker_state *pws, float a)
 {
-	if (pws->space && a >= 0)
-		fz_append_byte(ctx, pws->out, ' ');
+	fz_append_byte(ctx, pws->out, ' ');
 	fz_append_printf(ctx, pws->out, "%g", a);
 	pws->space = 1;
 }
@@ -140,11 +139,11 @@ svg_path_emit_number(fz_context *ctx, struct svg_path_walker_state *pws, float a
 static void
 svg_path_emit_command(fz_context *ctx, struct svg_path_walker_state *pws, char cmd)
 {
-	if (pws->cmd != cmd) {
-		fz_append_byte(ctx, pws->out, cmd);
-		pws->space = 0;
-		pws->cmd = cmd;
-	}
+	if (pws->space)
+		fz_append_byte(ctx, pws->out, ' ');
+	fz_append_byte(ctx, pws->out, cmd);
+	pws->space = 1;
+	pws->cmd = cmd;
 }
 
 static void
@@ -163,17 +162,9 @@ static void
 svg_path_lineto(fz_context *ctx, void *arg, float x, float y)
 {
 	struct svg_path_walker_state *pws = arg;
-	if (pws->x == x) {
-		svg_path_emit_command(ctx, pws, 'V');
-		svg_path_emit_number(ctx, pws, y);
-	} else if (pws->y == y) {
-		svg_path_emit_command(ctx, pws, 'H');
-		svg_path_emit_number(ctx, pws, x);
-	} else {
-		svg_path_emit_command(ctx, pws, 'L');
-		svg_path_emit_number(ctx, pws, x);
-		svg_path_emit_number(ctx, pws, y);
-	}
+	svg_path_emit_command(ctx, pws, 'L');
+	svg_path_emit_number(ctx, pws, x);
+	svg_path_emit_number(ctx, pws, y);
 	pws->x = x;
 	pws->y = y;
 }
@@ -1335,7 +1326,7 @@ svg_dev_begin_layer(fz_context *ctx, fz_device *dev, const char *name)
 	fz_buffer *out = sdev->out;
 
 	sdev->layers++;
-	fz_append_printf(ctx, out, "<g inkscape:groupmode=\"layer\" inkscape:label=%<>\n", name ? name : "");
+	/* fz_append_printf(ctx, out, "<g inkscape:groupmode=\"layer\" inkscape:label=%<>\n", name ? name : ""); */
 }
 
 static void
@@ -1348,7 +1339,7 @@ svg_dev_end_layer(fz_context *ctx, fz_device *dev)
 		return;
 
 	sdev->layers--;
-	fz_append_printf(ctx, out, "</g>\n");
+	/* fz_append_printf(ctx, out, "</g>\n"); */
 }
 
 static void
@@ -1359,7 +1350,7 @@ svg_dev_close_device(fz_context *ctx, fz_device *dev)
 
 	while (sdev->layers > 0)
 	{
-		fz_append_string(ctx, sdev->main, "</g>\n");
+		/* fz_append_string(ctx, sdev->main, "</g>\n"); */
 		sdev->layers--;
 	}
 
