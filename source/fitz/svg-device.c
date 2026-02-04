@@ -1251,7 +1251,7 @@ svg_dev_begin_layer(fz_context *ctx, fz_device *dev, const char *name)
 	fz_output *out = sdev->out;
 
 	sdev->layers++;
-	fz_write_printf(ctx, out, "<g id=\"Layer-%d\" data-name=\"%s\">\n", sdev->layers, name);
+	/* fz_write_printf(ctx, out, "<g id=\"Layer-%d\" data-name=\"%s\">\n", sdev->layers, name); */
 }
 
 static void
@@ -1264,7 +1264,7 @@ svg_dev_end_layer(fz_context *ctx, fz_device *dev)
 		return;
 
 	sdev->layers--;
-	fz_write_printf(ctx, out, "</g>\n");
+	/* fz_write_printf(ctx, out, "</g>\n"); */
 }
 
 static void
@@ -1275,7 +1275,7 @@ svg_dev_close_device(fz_context *ctx, fz_device *dev)
 
 	while (sdev->layers > 0)
 	{
-		fz_write_printf(ctx, out, "</g>\n");
+		/* fz_write_printf(ctx, out, "</g>\n"); */
 		sdev->layers--;
 	}
 
