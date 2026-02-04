@@ -103,6 +103,8 @@ fz_trace_text_span(fz_context *ctx, fz_output *out, fz_text_span *span, int dept
 		if (span->items[i].gid >= 0)
 		{
 			char name[32];
+			fz_snprintf(name, 32, "%d", span->items[i].gid);
+			fz_write_printf(ctx, out, " glyphid=\"%s\"", name);
 			fz_get_glyph_name(ctx, span->font, span->items[i].gid, name, sizeof name);
 			fz_write_printf(ctx, out, " glyph=\"%s\"", name);
 		}
